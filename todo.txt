@@ -1,0 +1,10 @@
+INPUTS
+ - image (bmp, black/white only)
+ - accel data (in this case mouse)
+
+OBJECTIVE
+ - 'render' an animation of the image moving to the console [using os.flush() I guess].
+   - No luminance, just on/off! 
+ - Use mouse accel to apply bouncy (bounce-back) movement based on velocity to the image.
+
+Lets start by reading mouse location for accel data and animating in the console! 2d only.
