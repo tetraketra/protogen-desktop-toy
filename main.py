@@ -10,12 +10,13 @@ r = 0.4; rubber = np.array([r, r])
 
 
 class body():
-    def __init__(self, mass, rubber, friction):
+    def __init__(self, mass, rubber, friction, pull):
         self.pos = np.array([0.0, 0.0])
         self.vel = np.array([0.0, 0.0])
-        self.mass = mass
-        self.rubber = rubber
-        self.friction = friction
+        self.mass = mass #higher mass reduces effects of forces linearly, [-inf, inf]
+        self.rubber = rubber #scalar for gravity, [0, inf]. Exponential!
+        self.friction = friction #proportion of velocity to cancel each frame, [0, 1] inclusive
+        self.pull = pull #proportion of distance from origin to cancel each frame, [0, 1] inclusive
         
     def update(self, bump_acc):
         global origin, gravity, period
@@ -23,21 +24,20 @@ class body():
         #1: create rubber-banding force, [dist from origin x,y]^rubber
         force = np.sign(self.pos) * np.abs(self.pos) ** self.rubber
         force = force / self.mass
-        print(self.vel)
+        print(self.pos)
 
         #2a: update velocity with rubber-banding force
-        #self.vel = np.subtract(self.vel, force * period)
         self.vel = np.subtract(self.vel, force * period)
 
         #2c: reduce velocity according to friction
-        self.vel = self.vel * (1 - self.friction)
+        self.vel = self.vel * (1 - self.friction) 
         
         #2c: update velocity with bumping force
         #self.vel = np.add(self.vel, bump_acc * period) #up for exactness
         self.vel = np.subtract(self.vel, bump_acc * period) #down for lagging behind real accel data
 
         #3: update position
-        self.pos = np.add(self.pos, self.vel * period)
+        self.pos = np.add(self.pos, self.vel * period) * (1 - self.pull)
 
 def func_with_sign(func, val):
     sign = copysign(1, val)
@@ -54,13 +54,13 @@ window = pygame.display.set_mode((600, 600))
 
 
 
-point = body(mass = 5, rubber = 2.7, friction = 0.14)
+point = body(mass = 5, rubber = 2.4, friction = 0.14, pull = 0.05)
 
 while True:
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
     mi.update_tracker(3)
     movement_data = mi.tracker
-    scaled_acc = np.array([func_with_sign(log10, x) for x in movement_data["vel2"]]) * 500
+    scaled_acc = np.array([func_with_sign(log10, x) for x in movement_data["acc"]]) * 500
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
 
     #Point gravity physics with damping for center of object.
