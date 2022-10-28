@@ -33,8 +33,8 @@ class body():
         self.vel = self.vel * (1 - self.friction) 
         
         #2c: update velocity with bumping force
-        #self.vel = np.add(self.vel, bump_acc * period) #up for exactness
-        self.vel = np.subtract(self.vel, bump_acc * period) #down for lagging behind real accel data
+        self.vel = np.add(self.vel, bump_acc * period) #up for exactness
+        #self.vel = np.subtract(self.vel, bump_acc * period) #down for lagging behind real accel data
 
         #3: update position
         self.pos = np.add(self.pos, self.vel * period) * (1 - self.pull)
@@ -59,8 +59,7 @@ point = body(mass = 5, rubber = 2.4, friction = 0.14, pull = 0.05)
 while True:
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
     mi.update_tracker(2)
-    movement_data = mi.tracker
-    scaled_acc = np.array([func_with_sign(log10, x) for x in movement_data["acc"]]) * 500
+    scaled_acc = np.array([func_with_sign(log10, x) for x in mi.tracker["acc"]]) * 500
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
 
     #Point gravity physics with damping for center of object.
