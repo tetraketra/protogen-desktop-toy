@@ -58,7 +58,7 @@ point = body(mass = 5, rubber = 2.4, friction = 0.14, pull = 0.05)
 
 while True:
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
-    mi.update_tracker(3)
+    mi.update_tracker(2)
     movement_data = mi.tracker
     scaled_acc = np.array([func_with_sign(log10, x) for x in movement_data["acc"]]) * 500
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
