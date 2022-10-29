@@ -1,7 +1,6 @@
 from ctypes import windll, Structure, c_long, byref
 from time import time
 
-
 class POINT(Structure):
     _fields_ = [("x", c_long), ("y", c_long)]
 

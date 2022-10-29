@@ -24,7 +24,6 @@ class body():
         #1: create rubber-banding force, [dist from origin x,y]^rubber
         force = np.sign(self.pos) * np.abs(self.pos) ** self.rubber
         force = force / self.mass
-        print(self.pos)
 
         #2a: update velocity with rubber-banding force
         self.vel = np.subtract(self.vel, force * period)
@@ -59,7 +58,7 @@ point = body(mass = 5, rubber = 2.4, friction = 0.14, pull = 0.05)
 while True:
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
     mi.update_tracker(2)
-    scaled_acc = np.array([func_with_sign(log10, x) for x in mi.tracker["acc"]]) * 500
+    scaled_acc = np.array([func_with_sign(log10, x) for x in mi.tracker["vel1"]]) * 500
     #ONLY NEEDED FOR MOUSE ACCEL BUMP IMPLEMENTATION#
 
     #Point gravity physics with damping for center of object.
@@ -71,10 +70,11 @@ while True:
     image_face = pygame.image.load("face.png").convert()
     window.blit(image_face, (point.pos[0], point.pos[1], 600, 600))
     window.blit(image_canvas, (0, 0, 600, 600))
-
     pygame.display.update()
     #ONLY NEEDED FOR PYGAME IMPLEMENTATION#
 
     #Sleep until next frame.
     sleep(period - ((time() - start_time) % period)) 
+
+    #print(mi.tracker)
 
